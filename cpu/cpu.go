@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	"strings"
 )
 
 // CPU Struct Definition
@@ -55,16 +56,22 @@ func (c *CPU) WriteRAM(address int, data int) {
 // LoadProgram takes in a file-name and loads the file content into memory
 func (c *CPU) LoadProgram(name string) {
 	address := 0
-	file, err := os.Open(`programs/`+name+`.gl8`)
+	file, err := os.Open(`programs/` + name + `.gl8`)
 	if err != nil {
 		fmt.Println(err)
 	}
 	defer file.Close()
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
-		conv, _ := strconv.Atoi(scanner.Text())
-		c.WriteRAM(address, conv)
-		address++
+		cleaned := strings.TrimSpace(scanner.Text())
+		if strings.HasPrefix(cleaned, "#") || strings.HasPrefix(cleaned, "//") {
+			fmt.Println("Skipping comment")
+			fmt.Println(cleaned)
+		} else {
+			conv, _ := strconv.Atoi(cleaned)
+			c.WriteRAM(address, conv)
+			address++
+		}
 	}
 	if err := scanner.Err(); err != nil {
 		fmt.Println(err)
