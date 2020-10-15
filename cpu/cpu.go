@@ -1,5 +1,12 @@
 package cpu
 
+import (
+	"bufio"
+	"fmt"
+	"os"
+	"strconv"
+)
+
 // CPU Struct Definition
 type CPU struct {
 	// Initialize RAM as 256 bytes
@@ -43,4 +50,23 @@ func (c *CPU) ReadRAM(address int) int {
 func (c *CPU) WriteRAM(address int, data int) {
 	c.RAM[address] = data
 	return
+}
+
+// LoadProgram takes in a file-name and loads the file content into memory
+func (c *CPU) LoadProgram(name string) {
+	address := 0
+	file, err := os.Open(`programs/`+name+`.gl8`)
+	if err != nil {
+		fmt.Println(err)
+	}
+	defer file.Close()
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		conv, _ := strconv.Atoi(scanner.Text())
+		c.WriteRAM(address, conv)
+		address++
+	}
+	if err := scanner.Err(); err != nil {
+		fmt.Println(err)
+	}
 }

@@ -33,3 +33,14 @@ func TestWriteRAM(t *testing.T) {
 		t.Fatalf(`ReamRAM(0) = %q, want match for %v`, created, want)
 	}
 }
+
+// TestLoadProgram calls LoadProgram with the value "test", and check that the corresponding data is placed in memory
+func TestLoadProgram(t *testing.T) {
+	cpu := CPU{[256]int{}, [8]int{}, 0, 0, 0, 0, [8]int{}, 0, 255, 0}
+	want := 10000010
+	cpu.LoadProgram("test")
+	created := cpu.ReadRAM(0)
+	if want != created {
+		t.Fatalf(`ReamRAM(0) = %q, want match for %v`, created, want)
+	}
+}
