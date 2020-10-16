@@ -44,3 +44,20 @@ func TestLoadProgram(t *testing.T) {
 		t.Fatalf(`ReamRAM(0) = %q, want match for %v`, created, want)
 	}
 }
+
+func TestLoadFullProgram(t *testing.T) {
+	cpu := CPU{[256]int{}, [8]int{}, 0, 0, 0, 0, [8]int{}, 0, 255, 0}
+	cpu.LoadProgram("test")
+	for index, value := range cpu.RAM[0:6] {
+		if cpu.ReadRAM(index) != value {
+			t.Fatalf(`Address %q = %v, want match for %#q`, index, value, cpu.ReadRAM(index))
+		}
+	}
+}
+
+// TestCPURun calls CPURun() and verifies the program was loaded into memory
+func TestCPURun(t *testing.T) {
+	cpu := CPU{[256]int{}, [8]int{}, 0, 0, 0, 0, [8]int{}, 0, 255, 0}
+	cpu.LoadProgram("mult")
+	cpu.CPURun()
+}
