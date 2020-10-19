@@ -49,7 +49,7 @@ func TestLoadFullProgram(t *testing.T) {
 	cpu := CPU{[256]int{}, [8]int{}, 0, 0, 0, 0, [8]int{}, 0, 255, 0}
 	cpu.LoadProgram("test")
 	for index, value := range cpu.RAM[0:6] {
-		if cpu.ReadRAM(index) != value {
+		if cpu.ReadRAM(index) != int(value) {
 			t.Fatalf(`Address %q = %v, want match for %#q`, index, value, cpu.ReadRAM(index))
 		}
 	}

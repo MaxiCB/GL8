@@ -12,6 +12,9 @@ import (
 // CPU Struct Definition
 type CPU struct {
 	// Initialize RAM as 256 bytes
+	// This need's converted into a map
+	// A Map would allow for on the fly conversion to the decimal representation
+	// As well as allow us to refer to address' in a similar manner as before
 	RAM [256]int
 	// # 8 general-purpose 8-bit numeric registers R0-R7.
 	//     # * R5 is reserved as the interrupt mask (IM)
@@ -81,6 +84,8 @@ func (c *CPU) LoadProgram(name string) {
 		cleaned := strings.TrimSpace(scanner.Text())
 		if strings.HasPrefix(cleaned, "#") || strings.HasPrefix(cleaned, "//") {
 		} else {
+			// Need to store the raw string in RAM
+			// This would allow for accessing, as well as being able to reference other address'
 			conv, _ := strconv.Atoi(cleaned)
 			c.WriteRAM(address, conv)
 			address++
